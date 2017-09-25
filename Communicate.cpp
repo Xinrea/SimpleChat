@@ -38,7 +38,7 @@ bool communicate::sconnect()
 
 bool communicate::sendmsg(char* message)
 {
-	result_ = send(connect_socket_, message, sizeof(message), 0);
+	result_ = send(connect_socket_, message, sizeof(message)-1, 0);
 	if (result_ == SOCKET_ERROR)return false;
 	return true;
 }

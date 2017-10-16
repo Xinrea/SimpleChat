@@ -2,25 +2,21 @@
 //
 
 #include "stdafx.h"
-#include "communicate.h"
+#include "msgstruct.h"
 #include <gui.hpp>
 #include <gui/widgets/label.hpp>
+#include <gui/widgets/button.hpp>
+#include "mregister.h"
 int main()
 {
-	//All names of Nana is in the namespace nana;
 	using namespace nana;
-	//Define a form object, class form will create a window
-	//when a form instance is created.
-	//The new window default visibility is false.
-	form fm;
-	//Define a label on the fm(form) with a specified area,
-	//and set the caption.
-	label lb{ fm, rectangle{ 10, 10, 100, 100 } };
-	lb.caption("Hello, world!");
-	//Expose the form.
+	form fm(API::make_center(400,300),appearance(true,true,false,false,true,false,false));
+	button but_signin(fm,rectangle(0,0,80,30));
+	but_signin.caption("Sign In");
+	fm.caption("Simple Chat");
+	label lb{ fm, rectangle{ 10, 50, 150, 20 } };
+	lb.caption("<b>Hello, world!</b>");
 	fm.show();
-	//Pass the control of the application to Nana's event
-	//service. It blocks the execution for dispatching user
-	//input until the form is closed.
+	mregister test;
 	exec();
 }

@@ -18,7 +18,19 @@
     <ClInclude Include="stdafx.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Communicate.h">
+    <ClInclude Include="myTcpSocket.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="myUdpSocket.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="msgstruct.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="mregister.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="mlogin.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -29,13 +41,22 @@
     <ClCompile Include="SimpleChat.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Communicate.cpp">
+    <ClCompile Include="myTcpSocket.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="myUdpSocket.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="mregister.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="mlogin.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="config.ini">
+    <Xml Include="config.ini">
       <Filter>源文件</Filter>
-    </None>
+    </Xml>
   </ItemGroup>
 </Project>

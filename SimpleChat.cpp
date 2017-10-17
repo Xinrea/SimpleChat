@@ -2,21 +2,69 @@
 //
 
 #include "stdafx.h"
-#include "msgstruct.h"
 #include <gui.hpp>
 #include <gui/widgets/label.hpp>
 #include <gui/widgets/button.hpp>
+#include <gui/widgets/textbox.hpp>
+#include <gui/msgbox.hpp>
+#include <threads/pool.hpp>
 #include "mregister.h"
+#include "mlogin.h"
+unsigned session;
+
+class mainWindow: public nana::form
+{
+private:
+	nana::button but_signin;
+	nana::label lable_account, lable_password;
+	nana::textbox tb_account, tb_password;
+	nana::threads::pool pool_;
+public:
+	mainWindow()
+	{
+		this->caption(L"µÇÂ¼");
+		nana::place plc(*this);
+		but_signin.create(*this); but_signin.caption(L"µÇÂ¼");
+		but_signin.events().click(nana::threads::pool_push(pool_, *this,&mainWindow::login));
+		lable_account.create(*this); lable_account.caption(L"ÕËºÅ:");
+		lable_password.create(*this); lable_password.caption(L"ÃÜÂë:");
+		tb_account.create(*this); tb_password.create(*this);
+		plc.div("vert<vert<><<weight=20%><l1><t1 weight=50%><weight=20%>weight=10%><weight=5%><<weight=20%><l2><t2 weight=50%><weight=20%>weight=10%><>  weight=70%><<weight=30%><bsignin><weight=30%>><>");
+		plc["l1"] << lable_account;
+		plc["l2"] << lable_password;
+		plc["t1"] << tb_account;
+		plc["t2"] << tb_password;
+		plc["bsignin"] << but_signin;
+		plc.collocate();
+		this->caption("Simple Chat");
+	}
+private:
+	void login()
+	{
+		std::string pwd;
+		char pwd_cstr[12];
+		mlogin login_t;
+		but_signin.caption(L"Á¬½Ó·þÎñÆ÷ÖÐ");
+		but_signin.enabled(false);
+		tb_password.getline(12, pwd);
+		strcpy_s(pwd_cstr, 12, pwd.c_str());
+		if (!login_t.login(tb_account.to_int(), pwd_cstr))
+		{
+			nana::msgbox messagebox("ERROR");
+			messagebox << "Login Failed";
+			messagebox.show();
+		}
+		else session = login_t.getSession();
+		but_signin.caption(L"µÇÂ¼");
+		but_signin.enabled(true);
+	}
+};
+
+
 int main()
 {
-	using namespace nana;
-	form fm(API::make_center(400,300),appearance(true,true,false,false,true,false,false));
-	button but_signin(fm,rectangle(0,0,80,30));
-	but_signin.caption("Sign In");
-	fm.caption("Simple Chat");
-	label lb{ fm, rectangle{ 10, 50, 150, 20 } };
-	lb.caption("<b>Hello, world!</b>");
-	fm.show();
-	mregister test;
-	exec();
+	mainWindow window;
+	window.show();
+	nana::exec();
+	return 0;
 }

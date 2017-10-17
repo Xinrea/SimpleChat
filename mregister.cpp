@@ -31,7 +31,6 @@ unsigned mregister::registerOnServer(WCHAR username[8], char password[12], char 
 {
 	registerMessage regMessage;//注册消息
 	basicMessage recvMessage;//响应消息
-	regMessage.msgType = RMSG;
 	regMessage.accountID = 0;
 	regMessage.session = 0;
 	wcscpy_s(regMessage.userName,8,username);

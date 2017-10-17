@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "myTcpSocket.h"
 
-
 myTcpSocket::myTcpSocket():errorCode(0)
 {
 }
@@ -45,14 +44,14 @@ bool myTcpSocket::connectToHost()//connect to the host
 	return true;
 }
 
-bool myTcpSocket::sendMsg(char* message, int length = DATALEN)//send message to the host
+bool myTcpSocket::sendMsg(char* message, int length)//send message to the host
 {
 	errorCode = send(connectSocket, message,length, 0);
 	if (errorCode == SOCKET_ERROR)return false;
 	return true;
 }
 
-bool myTcpSocket::recvMsg(char* message, int length = DATALEN)
+bool myTcpSocket::recvMsg(char* message, int length)
 {
 	errorCode = recv(connectSocket, message,length, MSG_WAITALL);
 	if(errorCode == SOCKET_ERROR)

@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="mfindpwd.h" />
     <ClInclude Include="mlogin.h" />
     <ClInclude Include="mregister.h" />
     <ClInclude Include="msgstruct.h" />
@@ -155,6 +156,7 @@
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="mfindpwd.cpp" />
     <ClCompile Include="mlogin.cpp" />
     <ClCompile Include="mregister.cpp" />
     <ClCompile Include="myTcpSocket.cpp" />

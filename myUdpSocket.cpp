@@ -31,14 +31,14 @@ bool myUdpSocket::config(WCHAR* ip, const int port)//config socket setting, read
 }
 
 
-bool myUdpSocket::sendMsg(char* message, int length = DATALEN)//send message to the host
+bool myUdpSocket::sendMsg(char* message, int length)//send message to the host
 {
 	errorCode = sendto(connectSocket,message,length,0,(sockaddr*)&addr,sizeof(addr));
 	if (errorCode == SOCKET_ERROR)return false;
 	return true;
 }
 
-bool myUdpSocket::recvMsg(char* message, int length = DATALEN)
+bool myUdpSocket::recvMsg(char* message, int length)
 {
 	errorCode = recvfrom(connectSocket,message,length,0,&from,&fromlen);
 	if (errorCode == SOCKET_ERROR)

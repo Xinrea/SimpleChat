@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/img/background">
+        <file>res/background.png</file>
+        <file>res/loginbut.png</file>
+        <file>res/simplechat.ico</file>
+        <file>res/background-msg.png</file>
+        <file>res/dialogBackground.png</file>
+    </qresource>
+</RCC>

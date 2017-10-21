@@ -1,20 +1,25 @@
-#pragma once
+ï»¿#ifndef MYTCPSOCKET_H
+#define MYTCPSOCKET_H
+
+
 #include "stdafx.h"
 #include "msgstruct.h"
 class myTcpSocket
 {
 private:
-	WSADATA wsaData;
-	sockaddr_in addr;
-	SOCKET connectSocket;
-	int errorCode;
+    WSADATA wsaData;
+    sockaddr_in addr;
+    SOCKET connectSocket;
+    int errorCode;
+    int timeout = 3000;
 public:
-	myTcpSocket();
-	~myTcpSocket();
-	bool config(WCHAR* ip, const int port);//TODO:¿¼ÂÇÒ»ÏÂportµÄÀàÐÍ
-	bool connectToHost();
-	bool sendMsg(char* message, int length = DATALEN);
-	bool recvMsg(char* message, int length = DATALEN);//×èÈûÐÍ£¬Ö±ÖÁ½ÓÊÕÍê±Ï
-	bool disconnect();
+    myTcpSocket();
+    ~myTcpSocket();
+    bool config(WCHAR* ip, const int port);//TODO:è€ƒè™‘ä¸€ä¸‹portçš„ç±»åž‹
+    bool connectToHost();
+    bool sendMsg(char* message, int length = DATALEN);
+    bool recvMsg(char* message, int length = DATALEN);//é˜»å¡žåž‹ï¼Œç›´è‡³æŽ¥æ”¶å®Œæ¯•
+    bool disconnect();
 };
 
+#endif // MYTCPSOCKET_H

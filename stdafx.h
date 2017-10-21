@@ -1,12 +1,6 @@
-// stdafx.h : ±ê×¼ÏµÍ³°üº¬ÎÄ¼şµÄ°üº¬ÎÄ¼ş£¬
-// »òÊÇ¾­³£Ê¹ÓÃµ«²»³£¸ü¸ÄµÄ
-// ÌØ¶¨ÓÚÏîÄ¿µÄ°üº¬ÎÄ¼ş
-//
+ï»¿#ifndef STDAFX_H
+#define STDAFX_H
 
-#pragma once
-#ifndef UNICODE
-#define UNICODE
-#endif
 
 #include <stdlib.h>
 #include <malloc.h>
@@ -18,5 +12,5 @@
 #include <stdio.h>
 #include <string>
 #include <iostream>
-#include <comdef.h>
-#pragma comment(lib,"Ws2_32.lib")
+#include <QDebug>
+#endif // STDAFX_H

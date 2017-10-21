@@ -1,4 +1,7 @@
-#pragma once
+﻿#ifndef MREGISTER_H
+#define MREGISTER_H
+
+
 #include "myTcpSocket.h"
 #define ERROR_SOCKETCONNECT 1
 #define ERROR_SOCKETSEND 2
@@ -6,13 +9,14 @@
 class mregister
 {
 private:
-	WCHAR serverIP[16];
-	int serverPort;
-	WCHAR configPath[25] = L".//config.ini";
+    WCHAR serverIP[16];
+    int serverPort;
+    WCHAR configPath[25] = L".//config.ini";
 public:
-	mregister();
-	bool refresh();
-	unsigned registerOnServer(WCHAR username[8], char password[12], char comfirminfo[12], unsigned& accountid);
-	~mregister();
+    mregister();
+    bool refresh();
+    unsigned registerOnServer(const char username[8], const char password[PASSLEN], const char comfirminfo[12], unsigned& accountid);
+    ~mregister();
 };
 
+#endif // MREGISTER_H

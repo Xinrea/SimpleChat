@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "myTcpSocket.h"
 
 myTcpSocket::myTcpSocket():errorCode(0)
@@ -12,66 +12,70 @@ myTcpSocket::~myTcpSocket()
 
 bool myTcpSocket::config(WCHAR* ip, const int port)//config socket setting, ready to connect
 {
-	errorCode = WSAStartup(MAKEWORD(2, 2), &wsaData);
-	if (errorCode != NO_ERROR) {
-		OutputDebugString(L"WSAStartup() Failed\n");
-		return false;
-	}
-	connectSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (connectSocket == INVALID_SOCKET) {
-		OutputDebugString(L"socket() Failed\n");
-		WSACleanup();
-		return false;
-	}
-	addr.sin_family = AF_INET;
-	InetPton(AF_INET, ip, &addr.sin_addr);
-	addr.sin_port = htons(port);
-	return true;
+    errorCode = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (errorCode != NO_ERROR) {
+
+        return false;
+    }
+    connectSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    setsockopt(connectSocket, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(int));
+    if (connectSocket == INVALID_SOCKET) {
+        WSACleanup();
+        return false;
+    }
+    char temp[12];
+    WideCharToMultiByte(CP_ACP,0,ip,-1,temp,12,NULL,NULL);
+    addr.sin_family = AF_INET;
+    addr.sin_addr.S_un.S_addr = inet_addr(temp);
+    addr.sin_port = htons(port);
+   qDebug("Ready to connect: %s  %d\n",temp,port);
+    return true;
 }
 
 bool myTcpSocket::connectToHost()//connect to the host
 {
-	errorCode = connect(connectSocket, reinterpret_cast<sockaddr*>(&addr), sizeof(addr));
-	if (errorCode == SOCKET_ERROR) {
-		OutputDebugString(L"connect() Failed\n");
-		errorCode = closesocket(connectSocket);
-		if (errorCode == SOCKET_ERROR) {
-			OutputDebugString(L"closesocket() Failed\n");
-			WSACleanup();
-		}
-		return false;
-	}
-	return true;
+    qDebug("Start to connect\n");
+    errorCode = connect(connectSocket, reinterpret_cast<sockaddr*>(&addr), sizeof(addr));
+    if (errorCode == SOCKET_ERROR) {
+        qDebug("Connect Error\n");
+        errorCode = closesocket(connectSocket);
+        if (errorCode == SOCKET_ERROR) {
+
+            WSACleanup();
+        }
+        return false;
+    }
+    return true;
 }
 
 bool myTcpSocket::sendMsg(char* message, int length)//send message to the host
 {
-	errorCode = send(connectSocket, message,length, 0);
-	if (errorCode == SOCKET_ERROR)return false;
-	return true;
+    qDebug("Start to sendmsg\n");
+    errorCode = send(connectSocket, message,length, 0);
+    if (errorCode == SOCKET_ERROR)return false;
+    return true;
 }
 
 bool myTcpSocket::recvMsg(char* message, int length)
 {
-	errorCode = recv(connectSocket, message,length, MSG_WAITALL);
-	if(errorCode == SOCKET_ERROR)
-	{
-		return false;
-	}
-	return true;
+    qDebug("Start to recvmsg\n");
+    errorCode = recv(connectSocket, message,length, MSG_WAITALL);
+    if(errorCode == SOCKET_ERROR || GetLastError() == WSAENETRESET)
+    {
+        return false;
+    }
+    return true;
 }
 
 
 bool myTcpSocket::disconnect()//disconnet for destorying or next config
 {
-	errorCode = closesocket(connectSocket);
-	if (errorCode == SOCKET_ERROR) {
-		OutputDebugString(L"closesocket() Failed\n");
-		return false;
-	}
-	WSACleanup();
-	return true;
+    qDebug("Start to disconnect\n");
+    errorCode = closesocket(connectSocket);
+    if (errorCode == SOCKET_ERROR) {
+
+        return false;
+    }
+    WSACleanup();
+    return true;
 }
-
-
-

@@ -1,14 +1,12 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "mregister.h"
 
 
 mregister::mregister()
 {
-	GetPrivateProfileString(L"SERVER", L"IP", L"127.0.0.1", serverIP, 16, configPath);
-	serverPort = GetPrivateProfileInt(L"SERVER", L"PORT", 0, configPath);
-	WCHAR debugInfo[30];
-	wsprintf(debugInfo, L"%s || %d\n", serverIP, serverPort);
-	OutputDebugString(debugInfo);
+    GetPrivateProfileString(L"SERVER", L"IP", L"127.0.0.1", serverIP, 16, configPath);
+    serverPort = GetPrivateProfileInt(L"SERVER", L"PORT", 12000, configPath);
+    qDebug("Port: %d\n",serverPort);
 }
 
 
@@ -18,40 +16,40 @@ mregister::~mregister()
 
 bool mregister::refresh()
 {
-	if(GetPrivateProfileString(L"SERVER", L"IP", L"127.0.0.1", serverIP, 16, configPath))
-	{
-		serverPort = GetPrivateProfileInt(L"SERVER", L"PORT", 0, configPath);
-		OutputDebugString(L"ERROR: Can't read config.ini");
-		return true;
-	}
-	return false;
+    if(GetPrivateProfileString(L"SERVER", L"IP", L"127.0.0.1", serverIP, 16, configPath))
+    {
+        serverPort = GetPrivateProfileInt(L"SERVER", L"PORT", 0, configPath);
+
+        return true;
+    }
+    return false;
 }
 
-unsigned mregister::registerOnServer(WCHAR username[8], char password[12], char comfirminfo[12], unsigned& accountid)
+unsigned mregister::registerOnServer(const char username[8], const char password[PASSLEN], const char comfirminfo[12], unsigned& accountid)
 {
-	registerMessage regMessage;//×¢²áÏûÏ¢
-	basicMessage recvMessage;//ÏìÓ¦ÏûÏ¢
-	regMessage.accountID = 0;
-	regMessage.session = 0;
-	wcscpy_s(regMessage.userName,8,username);
-	strcpy_s(regMessage.password, 12, password);
-	strcpy_s(regMessage.comfirmInfo, 12, comfirminfo);
-	myTcpSocket registerSocket;
-	registerSocket.config(serverIP, serverPort);
-	if(registerSocket.connectToHost())
-	{
-		if(registerSocket.sendMsg((char*)&regMessage))
-		{
-			if(registerSocket.recvMsg((char*)&recvMessage))
-			{
-				accountid = recvMessage.accountID;//µÃµ½×¢²áÕËºÅ
-				registerSocket.disconnect();//¶Ï¿ªÁ¬½Ó
-			}
-			else return ERROR_SOCKETRECV;
-		}
-		else return ERROR_SOCKETSEND;
-	}
-	else return ERROR_SOCKETCONNECT;
-	return 0;
+    registerMessage regMessage;//æ³¨å†Œæ¶ˆæ¯
+    basicMessage recvMessage;//å“åº”æ¶ˆæ¯
+    regMessage.msgType = REGISTER;
+    regMessage.accountID = 0;
+    regMessage.session = 0;
+    strcpy_s(regMessage.userName,8,username);
+    strcpy_s(regMessage.password, PASSLEN, password);
+    strcpy_s(regMessage.comfirmInfo, 12, comfirminfo);
+    myTcpSocket registerSocket;
+    registerSocket.config(serverIP, serverPort);
+    if(registerSocket.connectToHost())
+    {
+        if(registerSocket.sendMsg(reinterpret_cast<char*>(&regMessage)))
+        {
+            if(registerSocket.recvMsg(reinterpret_cast<char*>(&recvMessage)))
+            {
+                accountid = recvMessage.accountID;//å¾—åˆ°æ³¨å†Œè´¦å·
+                registerSocket.disconnect();//æ–­å¼€è¿æ¥
+            }
+            else return ERROR_SOCKETRECV;
+        }
+        else return ERROR_SOCKETSEND;
+    }
+    else return ERROR_SOCKETCONNECT;
+    return 0;
 }
-

@@ -1,96 +1,106 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "mlogin.h"
 
 mlogin::mlogin()
 {
-	account = 0;
-	session = 0;
-	//¶ÁÈ¡ÅäÖÃĞÅÏ¢
-	GetPrivateProfileString(L"SERVER", L"IP", L"127.0.0.1", serverIP, 16, configPath);
-	serverPort = GetPrivateProfileInt(L"SERVER", L"PORT", 0, configPath);
+    account = 0;
+    session = 0;
+    //è¯»å–é…ç½®ä¿¡æ¯
+    GetPrivateProfileString(L"SERVER", L"IP", L"127.0.0.1", serverIP, 16, configPath);
+    serverPort = GetPrivateProfileInt(L"SERVER", L"PORT", 12000, configPath);//æœ‰ç‚¹é—®é¢˜
 }
 
 
-bool mlogin::login(unsigned accountid, char password[12])
+unsigned mlogin::login(unsigned accountid, char password[PASSLEN])
 {
-	account = accountid;
-	//¹¹½¨ÏûÏ¢½á¹¹
-	loginMessage loginMsg;
-	basicMessage recvMsg;
-	loginMsg.accountID = accountid;
-	loginMsg.session = 0;
-	strcpy_s(loginMsg.password,12,password);
-	//·¢ËÍ½ÓÊÕÏûÏ¢
-	myTcpSocket loginSocket;
-	loginSocket.config(serverIP, serverPort);
-	OutputDebugString(L"log:connect\n");
-	if (!loginSocket.connectToHost())return false;
-	OutputDebugString(L"log:send\n");
-	if (!loginSocket.sendMsg((char*)&loginMsg))return false;
-	OutputDebugString(L"log:recv\n");
-	loginSocket.recvMsg((char*)&recvMsg);
-	session = recvMsg.session;
-	if(session != 0)
-	{
-		updateFlag = true;
-		OutputDebugString(L"log:Create thread\n");
-		std::thread tupdate(&mlogin::update, this);
-		tupdate.detach();//×ÓÏß³Ì×Ô¼ºÖ´ĞĞ
-		return true;
-	}
-	return false;
-	
+    account = accountid;
+    //æ„å»ºæ¶ˆæ¯ç»“æ„
+    loginMessage loginMsg;
+    basicMessage recvMsg;
+    loginMsg.msgType = LOGIN;
+    loginMsg.accountID = accountid;
+    loginMsg.session = 0;
+    loginMsg.port = port;
+    strcpy_s(loginMsg.password,PASSLEN,password);
+    //å‘é€æ¥æ”¶æ¶ˆæ¯
+    myTcpSocket loginSocket;
+    qDebug("Port:%d\n",serverPort);
+    loginSocket.config(serverIP, serverPort);
+
+    if (!loginSocket.connectToHost())return CONNECTERROR;
+
+    if (!loginSocket.sendMsg((char*)&loginMsg))return SENDERROR;
+
+    if(!loginSocket.recvMsg((char*)&recvMsg))return RECVERROR;
+    session = recvMsg.session;
+    qDebug("GetSession:%d\n",session);
+    if(session != 0)
+    {
+        updateFlag = true;
+        qDebug("Login successfully! Start to update state\n");
+        std::thread tupdate(&mlogin::update, this);
+        tupdate.detach();//å­çº¿ç¨‹è‡ªå·±æ‰§è¡Œ
+        return 0;
+    }
+    return RECVERROR;
+
 }
 
 unsigned mlogin::getSession() const
 {
-	return session;
+    return session;
 }
 
 bool mlogin::logout()
 {
-	stateMessage stateMsg, recvMsg;
-	stateMsg.session = session;
-	stateMsg.accountID = account;
-	stateMsg.keepAlive = false;
-	myTcpSocket logoutSocket;
-	logoutSocket.config(serverIP, serverPort);
-	logoutSocket.connectToHost();
-	logoutSocket.sendMsg((char*)&stateMsg, sizeof(stateMessage));
-	logoutSocket.sendMsg((char*)&recvMsg, sizeof(stateMessage));
-	if(!recvMsg.keepAlive)
-	{
-		logoutSocket.disconnect();
-		updateFlag = false;
-		return true;
-	}
-	return false;
+    stateMessage stateMsg, recvMsg;
+    stateMsg.msgType = STATE;
+    stateMsg.session = session;
+    stateMsg.accountID = account;
+    stateMsg.keepAlive = false;
+    myTcpSocket logoutSocket;
+    logoutSocket.config(serverIP, serverPort);
+    logoutSocket.connectToHost();
+    logoutSocket.sendMsg(reinterpret_cast<char*>(&stateMsg));
+    logoutSocket.recvMsg(reinterpret_cast<char*>(&recvMsg));
+    if(!recvMsg.keepAlive)
+    {
+        logoutSocket.disconnect();
+        updateFlag = false;
+        return true;
+    }
+    return false;
 }
 
 bool mlogin::update()
 {
-	//update online state
-	while(updateFlag)
-	{
-		Sleep(UPDATETIME * 1000);//Ã¿¾­¹ıUPDATETIMEÏò·şÎñÆ÷È·ÈÏÔÚÏß
-		stateMessage stateMsg, recvMsg;
-		stateMsg.session = session;
-		stateMsg.accountID = account;
-		stateMsg.keepAlive = true;
-		myTcpSocket logoutSocket;
-		logoutSocket.config(serverIP, serverPort);
-		logoutSocket.connectToHost();
-		logoutSocket.sendMsg((char*)&stateMsg, sizeof(stateMessage));
-		logoutSocket.sendMsg((char*)&recvMsg, sizeof(stateMessage));
-		session = recvMsg.session;
-		logoutSocket.disconnect();
-	}
-	
-	return true;
+    WCHAR serverIP_[16];
+    int serverPort_;
+    serverPort_ = serverPort;
+    wcscpy(serverIP_,serverIP);
+    //update online state
+    while(updateFlag)
+    {
+        Sleep(UPDATETIME * 1000);//æ¯ç»è¿‡UPDATETIMEå‘æœåŠ¡å™¨ç¡®è®¤åœ¨çº¿
+        stateMessage stateMsg, recvMsg;
+        stateMsg.msgType = STATE;
+        stateMsg.session = session;
+        stateMsg.accountID = account;
+        stateMsg.keepAlive = true;
+        myTcpSocket logoutSocket;
+        logoutSocket.config(serverIP_, serverPort_);
+        logoutSocket.connectToHost();
+        logoutSocket.sendMsg(reinterpret_cast<char*>(&stateMsg));
+        logoutSocket.recvMsg(reinterpret_cast<char*>(&recvMsg));
+        session = recvMsg.session;
+        logoutSocket.disconnect();
+    }
+
+    return true;
 }
 
 
 mlogin::~mlogin()
 {
-	updateFlag = false;
+    updateFlag = false;
 }

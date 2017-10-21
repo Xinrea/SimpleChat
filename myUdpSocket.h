@@ -1,20 +1,25 @@
-#pragma once
+ï»¿#ifndef MYUDPSOCKET_H
+#define MYUDPSOCKET_H
+
+
 #include "msgstruct.h"
 class myUdpSocket
 {
 private:
-	WSADATA wsaData;
-	sockaddr_in addr;
-	SOCKET connectSocket;
-	sockaddr from;
-	int fromlen;
-	int errorCode;
+    WSADATA wsaData;
+    sockaddr_in addr;
+    SOCKET connectSocket;
+    sockaddr from;
+    int fromlen;
+    int errorCode;
 public:
-	myUdpSocket();
-	~myUdpSocket();
-	bool config(WCHAR* ip, const int port);//TODO:¿¼ÂÇÒ»ÏÂportµÄÀàÐÍ
-	bool sendMsg(char* message, int length = DATALEN);
-	bool recvMsg(char* message, int length = DATALEN);//×èÈûÐÍ£¬Ö±ÖÁ½ÓÊÕÍê±Ï
-	bool clean();
+    myUdpSocket();
+    ~myUdpSocket();
+    bool config(WCHAR* ip, const int port);//TODO:è€ƒè™‘ä¸€ä¸‹portçš„ç±»åž‹
+    bool sendMsg(char* message, int length = DATALEN);
+    bool recvMsg(char* message, int length = DATALEN);//é˜»å¡žåž‹ï¼Œç›´è‡³æŽ¥æ”¶å®Œæ¯•
+    bool clean();
 };
 
+
+#endif // MYUDPSOCKET_H

@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QMouseEvent>
+#include "mainprocwindow.h"
+#include "mlogin.h"
 
 namespace Ui {
 class MainWindow;
@@ -15,6 +17,8 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+signals:
+    void updateState(bool online);
 private slots:
     void on_closeButton_clicked();
 
@@ -28,11 +32,16 @@ private slots:
 
     void on_findpwdButton_clicked();
 
+    void loginNow(bool control);
+
 private:
     Ui::MainWindow *ui;
+    mainProcWindow* mainW;
     bool headpressed;
     QPoint postion;
-    int session;
+    mlogin loginModule;
+    unsigned account;
+    char password[PASSLEN];
 protected:
     virtual void mousePressEvent(QMouseEvent* event);
     virtual void mouseMoveEvent(QMouseEvent* event);

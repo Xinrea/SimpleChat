@@ -10,6 +10,7 @@ findpwdWindow::findpwdWindow(QWidget *parent) :
     setWindowFlags(Qt::FramelessWindowHint);
     setWindowModality(Qt::ApplicationModal);
     setWindowIcon(QIcon(":/img/background/res/simplechat.ico"));
+    setWindowTitle("Find Account - SimpleChat");
     setAttribute(Qt::WA_TranslucentBackground);
 }
 
@@ -84,7 +85,8 @@ void findpwdWindow::on_pushButton_2_clicked()
         break;
         }
     case ERROR_CHANGEFAILE:{
-        ui->infoLabel->setText("找回错误:  修改密码失败，请检查输入信息");
+        ui->infoLabel->setText("找回错误:  修改失败，请检查输入");
+        break;
     }
     case 0: {
         ui->infoLabel->setText("找回成功，密码已修改");

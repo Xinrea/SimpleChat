@@ -34,7 +34,11 @@ SOURCES += \
     myudpsocket.cpp \
     messagebox.cpp \
     registerwindow.cpp \
-    findpwdwindow.cpp
+    findpwdwindow.cpp \
+    mainprocwindow.cpp \
+    mrequest.cpp \
+    chatwindow.cpp \
+    localserver.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -47,7 +51,11 @@ HEADERS += \
     myudpsocket.h \
     messagebox.h \
     registerwindow.h \
-    findpwdwindow.h
+    findpwdwindow.h \
+    mainprocwindow.h \
+    mrequest.h \
+    chatwindow.h \
+    localserver.h
 
 LIBS += -lWs2_32
 
@@ -55,7 +63,9 @@ FORMS += \
         mainwindow.ui \
     messagebox.ui \
     registerwindow.ui \
-    findpwdwindow.ui
+    findpwdwindow.ui \
+    mainprocwindow.ui \
+    chatwindow.ui
 
 DISTFILES += \
     config.ini

@@ -19,11 +19,6 @@ unsigned mfindpwd::findpwd(int accountid,const char comfirminfo[12], const char 
     strcpy_s(fpwdMsg.password, PASSLEN, newpwd);
     myTcpSocket fpwdSocket;
     fpwdSocket.config(serverIP, serverPort);
-    fpwdSocket.connectToHost();
-    fpwdSocket.sendMsg(reinterpret_cast<char*>(&fpwdMsg));
-    fpwdSocket.recvMsg(reinterpret_cast<char*>(&recvMsg));
-    fpwdSocket.disconnect();
-    if (recvMsg.accountID)return true;
 
     if(fpwdSocket.connectToHost())
     {
@@ -31,7 +26,7 @@ unsigned mfindpwd::findpwd(int accountid,const char comfirminfo[12], const char 
         {
             if(fpwdSocket.recvMsg(reinterpret_cast<char*>(&recvMsg)))
             {
-                if (recvMsg.accountID)
+                if (!recvMsg.accountID)//服务器返回0表示修改成功
                 {
                     fpwdSocket.disconnect();//断开连接
                     return 0;
@@ -43,7 +38,6 @@ unsigned mfindpwd::findpwd(int accountid,const char comfirminfo[12], const char 
         else return ERROR_SOCKETSEND;
     }
     else return ERROR_SOCKETCONNECT;
-    return false;
 }
 
 

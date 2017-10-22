@@ -10,6 +10,7 @@ registerWindow::registerWindow(QWidget *parent) :
     setWindowFlags(Qt::FramelessWindowHint);
     setWindowModality(Qt::ApplicationModal);
     setWindowIcon(QIcon(":/img/background/res/simplechat.ico"));
+    setWindowTitle("Register - SimpleChat");
     setAttribute(Qt::WA_TranslucentBackground);
 }
 

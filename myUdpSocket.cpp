@@ -24,10 +24,29 @@ bool myUdpSocket::config(WCHAR* ip, const int port)//config socket setting, read
         WSACleanup();
         return false;
     }
-    char temp[12];
-    WideCharToMultiByte(CP_ACP,0,ip,-1,temp,12,NULL,NULL);
+    char temp[16];
+    WideCharToMultiByte(CP_ACP,0,ip,-1,temp,16,NULL,NULL);
     addr.sin_family = AF_INET;
     addr.sin_addr.s_addr = inet_addr(temp);
+    addr.sin_port = htons(port);
+    return true;
+}
+
+bool myUdpSocket::config(unsigned long ip, const int port)//config socket setting, ready to connect
+{
+    errorCode = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (errorCode != NO_ERROR) {
+
+        return false;
+    }
+    connectSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (connectSocket == INVALID_SOCKET) {
+
+        WSACleanup();
+        return false;
+    }
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = ip;
     addr.sin_port = htons(port);
     return true;
 }

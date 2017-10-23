@@ -13,6 +13,7 @@
 #define REGISTER 5
 #define FINDPWD 6
 #define REQUEST 7
+#define FILEREQ 8
 
 struct stateMessage
 {
@@ -87,6 +88,27 @@ struct requestMessage//16
     unsigned int accountID;
     unsigned int requestID;
     char pad[112];
+};
+
+struct fileHead//52
+{
+    unsigned msgType;
+    char filename[40];
+    unsigned account;
+    unsigned total;
+    unsigned size;
+    char pad[76];
+};
+
+struct fileblock
+{
+    unsigned number;//4
+    char body[1020];
+};
+
+struct fileAck
+{
+    unsigned number;
 };
 
 

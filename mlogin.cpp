@@ -6,7 +6,7 @@ mlogin::mlogin()
     account = 0;
     session = 0;
     //读取配置信息
-    GetPrivateProfileString(L"SERVER", L"IP", L"127.0.0.1", serverIP, 16, configPath);
+    GetPrivateProfileString(L"SERVER", L"IP", L"127.0.0.1", serverIP, sizeof(serverIP), configPath);
     serverPort = GetPrivateProfileInt(L"SERVER", L"PORT", 12000, configPath);//有点问题
 }
 

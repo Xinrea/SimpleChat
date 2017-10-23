@@ -23,8 +23,8 @@ bool myTcpSocket::config(WCHAR* ip, const int port)//config socket setting, read
         WSACleanup();
         return false;
     }
-    char temp[12];
-    WideCharToMultiByte(CP_ACP,0,ip,-1,temp,12,NULL,NULL);
+    char temp[16];
+    WideCharToMultiByte(CP_ACP,0,ip,-1,temp,16,NULL,NULL);
     addr.sin_family = AF_INET;
     addr.sin_addr.S_un.S_addr = inet_addr(temp);
     addr.sin_port = htons(port);

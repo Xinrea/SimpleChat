@@ -49,6 +49,14 @@ unsigned mrequest::getUserinfo(unsigned accountid, char username[],unsigned long
                     requestSocket.disconnect();//断开连接
                     return ERROR_OFFLINE;
                 }
+                else if(recvMessage.msgType > 255)
+                {
+                    strcpy(username,recvMessage.username);
+                    ip = recvMessage.ip;
+                    port = recvMessage.port;
+                    requestSocket.disconnect();//断开连接
+                    return 0;
+                }
                 else
                 {
                     requestSocket.disconnect();//断开连接

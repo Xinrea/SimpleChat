@@ -12,6 +12,7 @@
 #include "mytcpsocket.h"
 #include "chatwindow.h"
 #include "mrequest.h"
+#include "filetrans.h"
 
 namespace Ui {
 class mainProcWindow;
@@ -28,7 +29,7 @@ public:
 private:
     bool configServer();
     void acceptThread();
-    unsigned toIPint(WCHAR* ip);
+    unsigned long toIPint(WCHAR* ip);
 signals:
     void stateNow(bool state);
     void clientNow(int clientSocket);

@@ -118,13 +118,13 @@ void mainProcWindow::initConfig(unsigned accounts, unsigned sessions, unsigned p
     account = accounts;
     session = sessions;
     localPort = port;
-    requestModule.config(accounts,sessions);
-    requestModule.getUserinfo(account,username,tip,tport);
-    ui->usernamelabel->setText(QString(username));
     configServer();
     QObject::connect(this,SIGNAL(clientNow(int)),this,SLOT(acceptOne(int)));
     std::thread tAccept(&mainProcWindow::acceptThread,this);
     tAccept.detach();
+    requestModule.config(accounts,sessions);
+    requestModule.getUserinfo(account,username,tip,tport);
+    ui->usernamelabel->setText(QString(username));
 }
 
 void mainProcWindow::on_stateButton_clicked()
@@ -275,7 +275,7 @@ void mainProcWindow::acceptThread()
 
 }
 
-unsigned mainProcWindow::toIPint(WCHAR *ip)
+unsigned long mainProcWindow::toIPint(WCHAR *ip)
 {
     char temp[12];
     WideCharToMultiByte(CP_ACP,0,ip,-1,temp,12,NULL,NULL);

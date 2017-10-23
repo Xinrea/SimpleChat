@@ -36,7 +36,8 @@ SOURCES += \
     findpwdwindow.cpp \
     mainprocwindow.cpp \
     mrequest.cpp \
-    chatwindow.cpp
+    chatwindow.cpp \
+    filetrans.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -52,7 +53,8 @@ HEADERS += \
     findpwdwindow.h \
     mainprocwindow.h \
     mrequest.h \
-    chatwindow.h
+    chatwindow.h \
+    filetrans.h
 
 LIBS += -lWs2_32
 

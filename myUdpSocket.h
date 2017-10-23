@@ -19,6 +19,7 @@ public:
     bool sendMsg(char* message, int length = DATALEN);
     bool recvMsg(char* message, int length = DATALEN);//阻塞型，直至接收完毕
     bool clean();
+    bool config(unsigned long ip, const int port);
 };
 
 

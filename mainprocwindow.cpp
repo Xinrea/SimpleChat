@@ -22,9 +22,12 @@ mainProcWindow::mainProcWindow(QWidget *parent) :
 
 mainProcWindow::~mainProcWindow()
 {
-    delete ui;
     delete updateTimer;
-    for(auto i : chatWs)delete i;
+    for(chatWindow* i : chatWs){
+        i->close();
+        delete i;
+    }
+    delete ui;
 }
 
 void mainProcWindow::mousePressEvent(QMouseEvent* event)
@@ -118,6 +121,10 @@ void mainProcWindow::initConfig(unsigned accounts, unsigned sessions, unsigned p
     requestModule.config(accounts,sessions);
     requestModule.getUserinfo(account,username,tip,tport);
     ui->usernamelabel->setText(QString(username));
+    configServer();
+    QObject::connect(this,SIGNAL(clientNow(int)),this,SLOT(acceptOne(int)));
+    std::thread tAccept(&mainProcWindow::acceptThread,this);
+    tAccept.detach();
 }
 
 void mainProcWindow::on_stateButton_clicked()
@@ -140,20 +147,214 @@ void mainProcWindow::on_stateButton_clicked()
 
 void mainProcWindow::on_starButton_clicked()
 {
-    chatWindow* w = new chatWindow;
-    chatWs.push_back(w);
     char username_t[8];
     unsigned long ip_t;
     unsigned port_t;
-    if(!requestModule.getUserinfo(ui->lineEdit->text().toInt(),username_t,ip_t,port_t))
+    if(ui->lineEdit->text().toInt() == account)
     {
-        w->setWindow(QString(username_t),ip_t,port_t);
-        w->show();
-        w->exec();
+        ui->lineEdit->setText("不能与自己聊天");
+        return;
     }
-    else
+    switch(requestModule.getUserinfo(ui->lineEdit->text().toInt(),username_t,ip_t,port_t))
+    {
+    case 0:{
+        bool result = true;
+        for(chatWindow* i:chatWs)//检查是否已有对应窗口
+        {
+            if(i->account == ui->lineEdit->text().toInt()){
+                qDebug("Log: Find WINDOW");
+                i->setWindow(QString(username_t),ip_t,port_t,ui->lineEdit->text().toInt(),account,session);
+                i->show();
+                result = false;
+                break;
+            }
+        }
+        if(result)
+        {
+            chatWindow* w = new chatWindow;
+            QObject::connect(w,SIGNAL(refreshChatW(uint)),this,SLOT(torefreshChatW(uint)));
+            chatWs.push_back(w);
+            w->setWindow(QString(username_t),ip_t,port_t,ui->lineEdit->text().toInt(),account,session);
+            w->show();
+            w->exec();
+        }
+        break;
+    }
+    case ERROR_OFFLINE:{
+        bool result = true;
+        for(chatWindow* i:chatWs)//检查是否已有对应窗口
+        {
+            if(i->account == ui->lineEdit->text().toInt()){
+                qDebug("Log: Find WINDOW");
+                i->setWindow(QString(username_t),toIPint(serverIP),serverPort,ui->lineEdit->text().toInt(),account,session);
+                i->show();
+                result = false;
+                break;
+            }
+        }
+        if(result)
+        {
+            chatWindow* w = new chatWindow;
+            QObject::connect(w,SIGNAL(refreshChatW(uint)),this,SLOT(torefreshChatW(uint)));
+            chatWs.push_back(w);
+            w->setWindow(QString(username_t),toIPint(serverIP),serverPort,ui->lineEdit->text().toInt(),account,session);
+            w->show();
+            w->exec();
+        }
+        break;
+    }
+    default:
     {
         ui->lineEdit->setText("查询该账号信息失败");
     }
+    }
 
+}
+
+void mainProcWindow::torefreshChatW(unsigned account)
+{
+    for(chatWindow* i:chatWs)
+    {
+        if(i->account == account)
+        {
+            char username_t[8];
+            unsigned long ip_t;
+            unsigned port_t;
+            switch(requestModule.getUserinfo(account,username_t,ip_t,port_t))
+            {
+            case 0:i->setWindow(QString(username_t),ip_t,port_t,account,this->account,session);break;
+            case ERROR_OFFLINE:i->setWindow(QString(username_t),toIPint(serverIP),serverPort,account,this->account,session);
+            }
+            break;
+        }
+    }
+}
+
+bool mainProcWindow::configServer()//config socket setting, ready to connect
+{
+    errorCode = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (errorCode != NO_ERROR) {
+
+        return false;
+    }
+    mainSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (mainSocket == INVALID_SOCKET) {
+
+        WSACleanup();
+        return false;
+    }
+    addr.sin_family = AF_INET;
+    addr.sin_addr.S_un.S_addr = INADDR_ANY;//任意地址
+    addr.sin_port = htons(localPort);
+    qDebug("Log: Bind Port");
+    errorCode = bind(mainSocket, (sockaddr*)&addr, sizeof(addr));
+    if (errorCode != 0)
+    {
+        qDebug("Log: Bind failed!");
+        return false;
+    }
+    qDebug("Log: Listen Port");
+    errorCode = listen(mainSocket,10);
+    if (errorCode != 0)
+    {
+        qDebug("Log: Listen failed!");
+        return false;
+    }
+    return true;
+}
+
+void mainProcWindow::acceptThread()
+{
+    while(true)
+    {
+        sockaddr_in clientAddr;
+        int length = sizeof(clientAddr);
+        SOCKET clientSocket = ::accept(mainSocket, (sockaddr*)&clientAddr,&length);
+        emit clientNow((int)clientSocket);
+    }
+
+}
+
+unsigned mainProcWindow::toIPint(WCHAR *ip)
+{
+    char temp[12];
+    WideCharToMultiByte(CP_ACP,0,ip,-1,temp,12,NULL,NULL);
+    return inet_addr(temp);
+}
+
+void mainProcWindow::acceptOne(int clientSockets)//connect to the host
+{
+    SOCKET clientSocket = (SOCKET)clientSockets;
+    if(clientSocket == INVALID_SOCKET)
+    {
+        qDebug("Accept failed");
+    }
+    else
+    {
+        qDebug("Log: Accept Client");
+        basicMessage recvMsg;
+        errorCode = recv(clientSocket,reinterpret_cast<char*>(&recvMsg),128,0);
+        qDebug("Log: Recieve message");
+        if (errorCode == SOCKET_ERROR)
+        {
+            qDebug("Recv failed");
+        }
+        else
+        {
+            char username_t[8];
+            unsigned long ip_t;
+            unsigned port_t;
+            bool result = true;
+            qDebug("Log: Check exist window");
+            for(chatWindow* i:chatWs)//检查是否已有对应窗口
+            {
+                if(i->account == recvMsg.accountID){
+                    qDebug("Log: Find WINDOW");
+                    switch(requestModule.getUserinfo(recvMsg.accountID,username_t,ip_t,port_t))
+                    {
+                    case 0:{
+                        i->setWindow(QString(username_t),ip_t,port_t,recvMsg.accountID,account,session);
+                        i->addMessage(QString(recvMsg.body));
+                        i->show();
+                        break;
+                    }
+                    case ERROR_OFFLINE:{
+                        i->setWindow(QString(username_t),toIPint(serverIP),serverPort,recvMsg.accountID,account,session);
+                        i->addMessage(QString(recvMsg.body));
+                        i->show();
+                        break;
+
+                    }
+                    }
+                    result = false;
+                    break;
+                }
+            }
+            if(result)
+            {
+                qDebug("Log: Create WINDOW");
+                chatWindow* w = new chatWindow;
+                QObject::connect(w,SIGNAL(refreshChatW(uint)),this,SLOT(torefreshChatW(uint)));
+                chatWs.push_back(w);
+                switch(requestModule.getUserinfo(recvMsg.accountID,username_t,ip_t,port_t))
+                {
+                case 0:{
+                    w->setWindow(QString(username_t),ip_t,port_t,recvMsg.accountID,account,session);
+                    w->addMessage(QString(recvMsg.body));
+                    w->show();
+                    w->exec();
+                    break;
+                }
+                case ERROR_OFFLINE:{
+                    w->setWindow(QString(username_t),toIPint(serverIP),serverPort,recvMsg.accountID,account,session);
+                    w->addMessage(QString(recvMsg.body));
+                    w->show();
+                    w->exec();
+                    break;
+
+                }
+                }
+            }
+        }
+    }
 }

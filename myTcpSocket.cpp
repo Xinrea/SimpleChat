@@ -32,10 +32,34 @@ bool myTcpSocket::config(WCHAR* ip, const int port)//config socket setting, read
     return true;
 }
 
+bool myTcpSocket::config(unsigned long ip, const int port)//config socket setting, ready to connect
+{
+    errorCode = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (errorCode != NO_ERROR) {
+
+        return false;
+    }
+    connectSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    setsockopt(connectSocket, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(int));
+    if (connectSocket == INVALID_SOCKET) {
+        WSACleanup();
+        return false;
+    }
+    addr.sin_family = AF_INET;
+    addr.sin_addr.S_un.S_addr = ip;
+    addr.sin_port = htons(port);
+   qDebug("Ready to connect");
+    return true;
+}
+
 bool myTcpSocket::connectToHost()//connect to the host
 {
     qDebug("Start to connect\n");
     errorCode = connect(connectSocket, reinterpret_cast<sockaddr*>(&addr), sizeof(addr));
+    sockaddr tempaddr;
+    int tempLen = sizeof(tempaddr);
+    getsockname(connectSocket,&tempaddr,&tempLen);
+    temp = ((sockaddr_in*)&tempaddr)->sin_port;
     if (errorCode == SOCKET_ERROR) {
         qDebug("Connect Error\n");
         errorCode = closesocket(connectSocket);
@@ -46,6 +70,11 @@ bool myTcpSocket::connectToHost()//connect to the host
         return false;
     }
     return true;
+}
+
+unsigned myTcpSocket::tempPort()
+{
+    return temp;
 }
 
 bool myTcpSocket::sendMsg(char* message, int length)//send message to the host

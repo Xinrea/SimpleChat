@@ -28,7 +28,8 @@ struct basicMessage//12
     unsigned msgType;
     unsigned int session;
     unsigned int accountID;
-    char body[116];
+    unsigned targetID;
+    char body[112];
 };
 
 struct respondMessage

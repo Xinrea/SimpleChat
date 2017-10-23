@@ -5,7 +5,6 @@
 #-------------------------------------------------
 
 QT       += core gui
-
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = SimpleChat
@@ -37,8 +36,7 @@ SOURCES += \
     findpwdwindow.cpp \
     mainprocwindow.cpp \
     mrequest.cpp \
-    chatwindow.cpp \
-    localserver.cpp
+    chatwindow.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -54,8 +52,7 @@ HEADERS += \
     findpwdwindow.h \
     mainprocwindow.h \
     mrequest.h \
-    chatwindow.h \
-    localserver.h
+    chatwindow.h
 
 LIBS += -lWs2_32
 

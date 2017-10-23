@@ -5,6 +5,11 @@
 #include <QMouseEvent>
 #include <QTimer>
 #include <vector>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <thread>
+#include "msgstruct.h"
+#include "mytcpsocket.h"
 #include "chatwindow.h"
 #include "mrequest.h"
 
@@ -20,8 +25,13 @@ public:
     explicit mainProcWindow(QWidget *parent = 0);
     void initConfig(unsigned accounts,unsigned sessions,unsigned port);
     ~mainProcWindow();
+private:
+    bool configServer();
+    void acceptThread();
+    unsigned toIPint(WCHAR* ip);
 signals:
     void stateNow(bool state);
+    void clientNow(int clientSocket);
 private slots:
     void on_closeButton_clicked();
 
@@ -35,7 +45,15 @@ private slots:
 
     void on_starButton_clicked();
 
+    void torefreshChatW(unsigned account);
+
+    void acceptOne(int clientSockets);
 private:
+    WSADATA wsaData;
+    sockaddr_in addr;
+    SOCKET mainSocket;
+    int errorCode;
+
     Ui::mainProcWindow *ui;
     bool headpressed;
     bool state;
@@ -48,7 +66,7 @@ private:
     WCHAR serverIP[16];
     int serverPort;
     WCHAR configPath[25] = L".//config.ini";
-    QTimer *updateTimer;
+    QTimer *updateTimer,*listenTimer;
     std::vector<chatWindow*> chatWs;
 protected:
     virtual void mousePressEvent(QMouseEvent* event);

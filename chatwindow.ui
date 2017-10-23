@@ -88,23 +88,6 @@ background-color: rgba(255, 255, 255, 20%);</string>
     <string>请输入待发送消息</string>
    </property>
   </widget>
-  <widget class="QTextEdit" name="showEdit">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>40</y>
-     <width>556</width>
-     <height>338</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">border:0px;
-background-color: rgba(255, 255, 255, 20%);</string>
-   </property>
-   <property name="readOnly">
-    <bool>true</bool>
-   </property>
-  </widget>
   <widget class="QLabel" name="usernameLabel">
    <property name="geometry">
     <rect>
@@ -159,14 +142,51 @@ color: rgb(255, 255, 255);</string>
     <string>PORT:</string>
    </property>
   </widget>
+  <widget class="QTextBrowser" name="textBrowser">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>40</y>
+     <width>556</width>
+     <height>338</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>12</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="mouseTracking">
+    <bool>true</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border:0px;
+background-color: rgba(255, 255, 255, 20%);</string>
+   </property>
+   <property name="html">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'微软雅黑'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="source">
+    <url>
+     <string>http://www.baidu.com</string>
+    </url>
+   </property>
+  </widget>
   <zorder>label</zorder>
   <zorder>inputEdit</zorder>
   <zorder>pushButton</zorder>
   <zorder>sendButton</zorder>
-  <zorder>showEdit</zorder>
   <zorder>usernameLabel</zorder>
   <zorder>ipLabel</zorder>
   <zorder>portLabel</zorder>
+  <zorder>textBrowser</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -35,13 +35,19 @@ unsigned mrequest::getUserinfo(unsigned accountid, char username[],unsigned long
             if(requestSocket.recvMsg(reinterpret_cast<char*>(&recvMessage),sizeof(respondMessage)))
             {
                 //得到指定帐号信息
-                if(recvMessage.msgType)
+                if(recvMessage.msgType == 1)
                 {
                     strcpy(username,recvMessage.username);
                     ip = recvMessage.ip;
                     port = recvMessage.port;
                     requestSocket.disconnect();//断开连接
                     return 0;
+                }
+                else if(recvMessage.msgType == 2)
+                {
+                    strcpy(username,recvMessage.username);
+                    requestSocket.disconnect();//断开连接
+                    return ERROR_OFFLINE;
                 }
                 else
                 {

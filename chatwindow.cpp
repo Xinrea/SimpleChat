@@ -14,14 +14,26 @@ chatWindow::chatWindow(QWidget *parent) :
                                   QPushButton:pressed{background-color: rgba(255, 255, 255,70%);}");
 }
 
-void chatWindow::setWindow(QString name,unsigned long ip,unsigned port)
+void chatWindow::setWindow(QString name,unsigned long ips,unsigned ports,unsigned accounts,unsigned myaccounts,unsigned mysessions)
 {
     char buf[16];
     intIPtoStr(ip,buf);
     setWindowTitle(name);
+    account = accounts;
+    ip = ips;
+    port = ports;
+    myaccount = myaccounts;
+    mysession = mysessions;
     ui->usernameLabel->setText(name);
-    ui->ipLabel->setText(QString("IP: ")+QString(buf));
+    ui->ipLabel->setText(QString("IP: ")+QString::number(ip));
     ui->portLabel->setText(QString("PORT: ")+QString::number(port));
+}
+
+void chatWindow::addMessage(QString msg)
+{
+    Hbody += "<p align=\"left\"><span class=\"name\">"+ui->usernameLabel->text()+"</span></p>";
+    Hbody += "<p align=\"left\"><span class=\"msg\">"+msg+"</span></p>";
+    ui->textBrowser->setHtml(Hhead+Hbody+Hbottom);
 }
 
 chatWindow::~chatWindow()
@@ -66,5 +78,26 @@ void chatWindow::mouseReleaseEvent(QMouseEvent* event)
 
 void chatWindow::on_pushButton_clicked()
 {
-    this->close();
+    this->hide();
+}
+
+void chatWindow::on_sendButton_clicked()
+{
+    //请求mainproc刷新本窗口信息
+    emit refreshChatW(account);
+    basicMessage sendMsg;
+    if(ui->inputEdit->toPlainText().length() == 0)return;
+    sendMsg.accountID = myaccount;
+    sendMsg.session = mysession;
+    sendMsg.targetID = account;
+    strcpy(sendMsg.body,ui->inputEdit->toPlainText().toStdString().data());
+    myTcpSocket sendSocket;
+    sendSocket.config(ip,port);
+    sendSocket.connectToHost();
+    sendSocket.sendMsg(reinterpret_cast<char*>(&sendMsg));
+    sendSocket.disconnect();
+    Hbody += "<div class=\"smsg\"><p align=\"right\">"+ui->inputEdit->toPlainText()+"</p></div>";
+    ui->textBrowser->setHtml(Hhead+Hbody+Hbottom);
+    ui->inputEdit->setText("");
+
 }

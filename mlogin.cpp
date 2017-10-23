@@ -20,7 +20,6 @@ unsigned mlogin::login(unsigned accountid, char password[PASSLEN])
     loginMsg.msgType = LOGIN;
     loginMsg.accountID = accountid;
     loginMsg.session = 0;
-    loginMsg.port = port;
     strcpy_s(loginMsg.password,PASSLEN,password);
     //发送接收消息
     myTcpSocket loginSocket;
@@ -28,7 +27,8 @@ unsigned mlogin::login(unsigned accountid, char password[PASSLEN])
     loginSocket.config(serverIP, serverPort);
 
     if (!loginSocket.connectToHost())return CONNECTERROR;
-
+    port = loginSocket.tempPort();
+    loginMsg.port = port;
     if (!loginSocket.sendMsg((char*)&loginMsg))return SENDERROR;
 
     if(!loginSocket.recvMsg((char*)&recvMsg))return RECVERROR;

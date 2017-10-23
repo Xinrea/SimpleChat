@@ -5,6 +5,7 @@
 #define ERROR_SOCKETSEND 2
 #define ERROR_SOCKETRECV 3
 #define ERROR_BLANK 4
+#define ERROR_OFFLINE 5
 
 class mrequest
 {

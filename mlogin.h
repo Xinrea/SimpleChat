@@ -19,7 +19,7 @@ private:
 public:
     unsigned account;
     unsigned session;
-    unsigned port = 0;
+    unsigned port = 6330;
 public:
     mlogin();
     unsigned login(unsigned accountid, char password[PASSLEN]);

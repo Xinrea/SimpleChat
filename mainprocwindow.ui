@@ -44,6 +44,9 @@
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
    <property name="styleSheet">
     <string notr="true">border:0px;</string>
    </property>
@@ -62,6 +65,9 @@
    </property>
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
    </property>
    <property name="styleSheet">
     <string notr="true">border:0px;</string>
@@ -103,6 +109,9 @@
      <height>20</height>
     </rect>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
    <property name="styleSheet">
     <string notr="true">border:0px;color:rgb(0, 255, 0);</string>
    </property>
@@ -125,6 +134,9 @@
      <pointsize>9</pointsize>
     </font>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::ClickFocus</enum>
+   </property>
    <property name="styleSheet">
     <string notr="true">border:0px;</string>
    </property>
@@ -135,7 +147,7 @@
     <number>0</number>
    </property>
    <property name="placeholderText">
-    <string>请输入欲关注的账号</string>
+    <string>请输入对方的账号</string>
    </property>
   </widget>
   <widget class="QPushButton" name="starButton">
@@ -147,6 +159,9 @@
      <height>32</height>
     </rect>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
    <property name="styleSheet">
     <string notr="true">border:0px;
 font: 9pt &quot;微软雅黑&quot;;
@@ -155,7 +170,10 @@ border-bottom-left-radius:5px;
 background-color: rgba(21, 173, 235,10%);</string>
    </property>
    <property name="text">
-    <string>添加关注</string>
+    <string>聊天</string>
+   </property>
+   <property name="shortcut">
+    <string>Return</string>
    </property>
   </widget>
   <widget class="QLabel" name="label">
@@ -174,6 +192,22 @@ background-color: rgba(21, 173, 235,10%);</string>
     <string/>
    </property>
   </widget>
+  <widget class="QListView" name="listView">
+   <property name="geometry">
+    <rect>
+     <x>4</x>
+     <y>136</y>
+     <width>291</width>
+     <height>571</height>
+    </rect>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+  </widget>
   <zorder>Backlabel</zorder>
   <zorder>label</zorder>
   <zorder>closeButton</zorder>
@@ -182,6 +216,7 @@ background-color: rgba(21, 173, 235,10%);</string>
   <zorder>stateButton</zorder>
   <zorder>lineEdit</zorder>
   <zorder>starButton</zorder>
+  <zorder>listView</zorder>
  </widget>
  <resources/>
  <connections/>

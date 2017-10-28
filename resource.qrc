@@ -7,5 +7,6 @@
         <file>res/dialogBackground.png</file>
         <file>res/MainProcWindow.png</file>
         <file>res/chatWindow.png</file>
+        <file>listView.qss</file>
     </qresource>
 </RCC>

@@ -4,9 +4,11 @@
 #include <QDialog>
 #include <QFileDialog>
 #include <QMouseEvent>
+#include <QTimer>
+#include <QMessageBox>
 #include "msgstruct.h"
 #include "mytcpsocket.h"
-#include "filetrans.h"
+#include "mfile.h"
 
 namespace Ui {
 class chatWindow;
@@ -19,12 +21,13 @@ class chatWindow : public QDialog
 public:
     explicit chatWindow(QWidget *parent = 0);
     void setWindow(QString name,unsigned long ip,unsigned port,unsigned accounts,unsigned myaccounts,unsigned mysessions);
-    void setFileInfo(QString filename,int filesize);
+    void setFileInfo(QString filename,unsigned filesize,unsigned filetotal,unsigned localport);
     void addMessage(QString msg);
     ~chatWindow();
     unsigned account;
     unsigned long ip;
     unsigned port;
+    char *IntToStr(const int ip, char *buf);
 private:
     Ui::chatWindow *ui;
     bool headpressed;
@@ -34,17 +37,25 @@ private:
     QString Hbottom = "</body></html>";
     unsigned myaccount;
     unsigned mysession;
-    fileTrans* fileControl;
+
+    unsigned filesize;
+    unsigned total;
+    unsigned udpPort;
+
+    mfile* filecontrol = nullptr;
 protected:
     virtual void mousePressEvent(QMouseEvent* event);
     virtual void mouseMoveEvent(QMouseEvent* event);
     virtual void mouseReleaseEvent(QMouseEvent* event);
 signals:
     void refreshChatW(unsigned account);
+public slots:
+    void progress(int t);
 private slots:
     void on_pushButton_clicked();
     void on_sendButton_clicked();
     void on_fileButton_clicked();
+    void on_textBrowser_textChanged();
 };
 
 #endif // CHATWINDOW_H

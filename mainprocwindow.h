@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QMouseEvent>
 #include <QTimer>
+#include <QStringListModel>
 #include <vector>
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -12,7 +13,6 @@
 #include "mytcpsocket.h"
 #include "chatwindow.h"
 #include "mrequest.h"
-#include "filetrans.h"
 
 namespace Ui {
 class mainProcWindow;
@@ -30,9 +30,11 @@ private:
     bool configServer();
     void acceptThread();
     unsigned long toIPint(WCHAR* ip);
+    int addHistroy(QString qsusername,unsigned accountid);
 signals:
     void stateNow(bool state);
     void clientNow(int clientSocket);
+    void fileTo(char* buff);
 private slots:
     void on_closeButton_clicked();
 
@@ -49,6 +51,8 @@ private slots:
     void torefreshChatW(unsigned account);
 
     void acceptOne(int clientSockets);
+    void on_listView_doubleClicked(const QModelIndex &index);
+
 private:
     WSADATA wsaData;
     sockaddr_in addr;
@@ -69,6 +73,9 @@ private:
     WCHAR configPath[25] = L".//config.ini";
     QTimer *updateTimer,*listenTimer;
     std::vector<chatWindow*> chatWs;
+    QStringListModel* listModel;
+    QStringList histroyList;
+    std::vector<int> accountList;
 protected:
     virtual void mousePressEvent(QMouseEvent* event);
     virtual void mouseMoveEvent(QMouseEvent* event);

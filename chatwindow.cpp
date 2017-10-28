@@ -9,12 +9,15 @@ chatWindow::chatWindow(QWidget *parent) :
     setWindowFlags(Qt::FramelessWindowHint);
     setWindowIcon(QIcon(":/img/background/res/simplechat.ico"));
     setAttribute(Qt::WA_TranslucentBackground);
+    ui->FileLabel->setVisible(false);
+    ui->progressBar->setVisible(false);
     ui->sendButton->setStyleSheet("QPushButton{border:0px;font: 9pt '微软雅黑';color: rgb(0, 0, 0);border-top-left-radius:5px;border-bottom-left-radius:5px;background-color: rgb(255, 255, 255);}\
                                    QPushButton:hover{background-color: rgba(255, 255, 255,90%);}\
                                   QPushButton:pressed{background-color: rgba(255, 255, 255,70%);}");
     ui->fileButton->setStyleSheet("QPushButton{border:0px;font: 9pt '微软雅黑';color: rgb(0, 0, 0);border-top-right-radius:5px;border-bottom-right-radius:5px;background-color: rgb(218, 218, 218);}\
                                  QPushButton:hover{background-color: rgba(218, 218, 218,90%);}\
                                 QPushButton:pressed{background-color: rgba(218, 218, 218,70%);}");
+
 }
 
 void chatWindow::setWindow(QString name,unsigned long ips,unsigned ports,unsigned accounts,unsigned myaccounts,unsigned mysessions)
@@ -26,14 +29,41 @@ void chatWindow::setWindow(QString name,unsigned long ips,unsigned ports,unsigne
     myaccount = myaccounts;
     mysession = mysessions;
     ui->usernameLabel->setText(name);
-    ui->ipLabel->setText(QString("IP: ")+QString::number(ip));
-    ui->portLabel->setText(QString("PORT: ")+QString::number(port));
+    if(port == 12000)
+    {
+        ui->ipLabel->setText(QString("IP: 离线"));
+        ui->portLabel->setText(QString("PORT: 离线"));
+    }
+    else
+    {
+        char ipstring[16];
+        ui->ipLabel->setText(QString("IP: ")+QString(IntToStr(ip,ipstring)));
+        ui->portLabel->setText(QString("PORT: ")+QString::number(port));
+    }
+    filecontrol = new mfile;
+    connect(filecontrol,SIGNAL(progressTo(int)),this,SLOT(progress(int)));
 }
 
-void chatWindow::setFileInfo(QString filename, int filesize)
+char *chatWindow::IntToStr(const int ip, char *buf)
+{
+    sprintf(buf, "%u.%u.%u.%u",
+        (unsigned char )*((char *)&ip + 0),
+        (unsigned char )*((char *)&ip + 1),
+        (unsigned char )*((char *)&ip + 2),
+        (unsigned char )*((char *)&ip + 3));
+    return buf;
+}
+
+void chatWindow::setFileInfo(QString filename, unsigned filesize, unsigned filetotal,unsigned localport)
 {
     ui->filenameLabel->setText(QString("文件名: ")+filename);
-    ui->fileSizeLabel->setText(QString("文件大小: ")+QString::number(filesize));
+    ui->fileSizeLabel->setText(QString("文件大小: ")+QString::number(filesize/1024)+QString("KB"));
+    this->filesize = filesize;
+    total = filetotal;
+    udpPort = localport+1;
+    filecontrol->config(udpPort,filename,total,filesize);
+    ui->FileLabel->setVisible(true);
+    ui->progressBar->setVisible(true);
 }
 
 void chatWindow::addMessage(QString msg)
@@ -45,8 +75,10 @@ void chatWindow::addMessage(QString msg)
 
 chatWindow::~chatWindow()
 {
+    delete filecontrol;
     delete ui;
 }
+
 
 
 void chatWindow::mousePressEvent(QMouseEvent* event)
@@ -74,6 +106,12 @@ void chatWindow::mouseReleaseEvent(QMouseEvent* event)
     Q_UNUSED(event);
     headpressed = false;
 }
+
+void chatWindow::progress(int t)
+{
+    ui->progressBar->setValue(t);
+}
+
 
 void chatWindow::on_pushButton_clicked()
 {
@@ -113,7 +151,22 @@ void chatWindow::on_fileButton_clicked()
         if(fileChoose.exec() == QDialog::Accepted)
         {
             QString path = fileChoose.selectedFiles()[0];
-            fileControl = new fileTrans(path,ip,port);
+            qDebug("Get file path");
+            filecontrol->sendFile(path,myaccount,ip,port);
         }
     }
+    else
+    {
+        QMessageBox errorMsg;
+        errorMsg.setWindowIcon(QIcon(":/img/background/res/simplechat.ico"));
+        errorMsg.setText("对方不在线，无法传输文件");
+        errorMsg.setWindowTitle("ERROR");
+        errorMsg.show();
+        errorMsg.exec();
+    }
+}
+
+void chatWindow::on_textBrowser_textChanged()
+{
+    ui->textBrowser->moveCursor(QTextCursor::End);
 }

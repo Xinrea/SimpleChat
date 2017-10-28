@@ -42,6 +42,9 @@ background-image: url(:/img/background/res/dialogBackground.png);</string>
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
    <property name="styleSheet">
     <string notr="true">border:0px;</string>
    </property>
@@ -92,6 +95,9 @@ color: rgb(255, 255, 255);</string>
      <pointsize>11</pointsize>
     </font>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::ClickFocus</enum>
+   </property>
    <property name="styleSheet">
     <string notr="true">background-image: url();
 border-top-left-radius:4px;
@@ -126,6 +132,9 @@ border-bottom-right-radius:0px;</string>
      <family>微软雅黑</family>
      <pointsize>11</pointsize>
     </font>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::ClickFocus</enum>
    </property>
    <property name="styleSheet">
     <string notr="true">background-image: url();
@@ -162,6 +171,9 @@ border-radius:4px;</string>
      <pointsize>11</pointsize>
     </font>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::ClickFocus</enum>
+   </property>
    <property name="styleSheet">
     <string notr="true">background-image: url();
 border-bottom-left-radius:4px;
@@ -197,6 +209,9 @@ border-top-right-radius:0px;</string>
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
    <property name="styleSheet">
     <string notr="true">background-image: url();
 font: 75 40pt &quot;微软雅黑&quot;;
@@ -205,6 +220,9 @@ border:0px;</string>
    </property>
    <property name="text">
     <string>&gt;&gt;</string>
+   </property>
+   <property name="shortcut">
+    <string>Return</string>
    </property>
   </widget>
   <widget class="QLabel" name="infoLabel">
@@ -242,6 +260,11 @@ color: rgb(255, 0, 0);</string>
   <zorder>pushButton_2</zorder>
   <zorder>infoLabel</zorder>
  </widget>
+ <tabstops>
+  <tabstop>accountEdit</tabstop>
+  <tabstop>passwordEdit</tabstop>
+  <tabstop>comfirmEdit</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

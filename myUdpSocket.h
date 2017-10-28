@@ -9,9 +9,8 @@ private:
     WSADATA wsaData;
     sockaddr_in addr;
     SOCKET connectSocket;
-    sockaddr from;
-    int fromlen;
     int errorCode;
+    int timeout = 100;
 public:
     myUdpSocket();
     ~myUdpSocket();

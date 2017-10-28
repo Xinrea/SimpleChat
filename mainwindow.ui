@@ -10,6 +10,9 @@
     <height>330</height>
    </rect>
   </property>
+  <property name="focusPolicy">
+   <enum>Qt::StrongFocus</enum>
+  </property>
   <property name="windowTitle">
    <string>SimpleChat</string>
   </property>
@@ -35,6 +38,9 @@
     <property name="cursor">
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
     <property name="styleSheet">
      <string notr="true">background-image: url(:/img/background/res/loginbut.png);
 color: rgb(255, 255, 255);
@@ -42,6 +48,9 @@ border:10px;</string>
     </property>
     <property name="text">
      <string/>
+    </property>
+    <property name="shortcut">
+     <string>Return</string>
     </property>
    </widget>
    <widget class="QPushButton" name="registerButton">
@@ -55,6 +64,9 @@ border:10px;</string>
     </property>
     <property name="cursor">
      <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
     </property>
     <property name="styleSheet">
      <string notr="true">background-image: url();
@@ -82,6 +94,9 @@ color: rgb(255, 255, 255);
       <family>微软雅黑</family>
       <pointsize>11</pointsize>
      </font>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::ClickFocus</enum>
     </property>
     <property name="styleSheet">
      <string notr="true">background-image: url();
@@ -118,6 +133,9 @@ border-bottom-right-radius:0px;</string>
       <pointsize>11</pointsize>
      </font>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::ClickFocus</enum>
+    </property>
     <property name="styleSheet">
      <string notr="true">background-image: url();
 border-bottom-left-radius:4px;
@@ -153,6 +171,9 @@ border-top-right-radius:0px;</string>
     <property name="cursor">
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
     <property name="styleSheet">
      <string notr="true">color: rgb(255, 255, 255);
 font: 9pt &quot;微软雅黑&quot;;
@@ -175,6 +196,9 @@ border:0px;</string>
     <property name="cursor">
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
     <property name="styleSheet">
      <string notr="true">background-image: url();
 background:transparent;
@@ -195,6 +219,9 @@ border:10px;</string>
     </property>
     <property name="cursor">
      <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
     </property>
     <property name="styleSheet">
      <string notr="true">background-image: url();
@@ -234,6 +261,11 @@ color: rgb(255, 0, 0);</string>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>loginButton</tabstop>
+  <tabstop>accountEdit</tabstop>
+  <tabstop>passwordEdit</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

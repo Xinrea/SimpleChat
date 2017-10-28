@@ -28,6 +28,9 @@
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
    <property name="styleSheet">
     <string notr="true">border:0px;
 background-image:url();</string>
@@ -50,6 +53,9 @@ background-image:url();</string>
      <family>微软雅黑</family>
      <pointsize>11</pointsize>
     </font>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::ClickFocus</enum>
    </property>
    <property name="styleSheet">
     <string notr="true">background-image: url();
@@ -89,6 +95,9 @@ border-top-right-radius:0px;</string>
      <pointsize>11</pointsize>
     </font>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::ClickFocus</enum>
+   </property>
    <property name="styleSheet">
     <string notr="true">background-image: url();
 border-top-left-radius:4px;
@@ -123,6 +132,9 @@ border-bottom-right-radius:0px;</string>
      <family>微软雅黑</family>
      <pointsize>11</pointsize>
     </font>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::ClickFocus</enum>
    </property>
    <property name="styleSheet">
     <string notr="true">background-image: url();
@@ -184,6 +196,9 @@ color: rgb(255, 255, 255);</string>
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
    <property name="styleSheet">
     <string notr="true">background-image: url();
 font: 75 40pt &quot;微软雅黑&quot;;
@@ -192,6 +207,9 @@ border:0px;</string>
    </property>
    <property name="text">
     <string>&gt;&gt;</string>
+   </property>
+   <property name="shortcut">
+    <string>Return</string>
    </property>
   </widget>
   <widget class="QLabel" name="backLable">
@@ -245,6 +263,11 @@ color: rgb(255, 0, 0);</string>
   <zorder>pushButton_2</zorder>
   <zorder>infoLabel</zorder>
  </widget>
+ <tabstops>
+  <tabstop>usernameEdit</tabstop>
+  <tabstop>passwordEdit</tabstop>
+  <tabstop>comfirmEdit</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

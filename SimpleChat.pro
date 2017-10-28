@@ -37,7 +37,7 @@ SOURCES += \
     mainprocwindow.cpp \
     mrequest.cpp \
     chatwindow.cpp \
-    filetrans.cpp
+    mfile.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -54,7 +54,7 @@ HEADERS += \
     mainprocwindow.h \
     mrequest.h \
     chatwindow.h \
-    filetrans.h
+    mfile.h
 
 LIBS += -lWs2_32
 
@@ -67,7 +67,8 @@ FORMS += \
     chatwindow.ui
 
 DISTFILES += \
-    config.ini
+    config.ini \
+    listView.qss
 
 RESOURCES += \
     resource.qrc

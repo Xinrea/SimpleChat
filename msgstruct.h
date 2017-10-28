@@ -15,6 +15,8 @@
 #define REQUEST 7
 #define FILEREQ 8
 
+#define UDPLEN 1016
+
 struct stateMessage
 {
     unsigned msgType;
@@ -26,11 +28,11 @@ struct stateMessage
 
 struct basicMessage//12
 {
-    unsigned msgType;
-    unsigned int session;
-    unsigned int accountID;
-    unsigned targetID;
-    char body[112];
+    unsigned msgType;//FILEREQ
+    unsigned int session;//SIZE
+    unsigned int accountID;//ACCOUNT
+    unsigned targetID;//TOTAL
+    char body[112];//FILENAME
 };
 
 struct respondMessage
@@ -90,20 +92,12 @@ struct requestMessage//16
     char pad[112];
 };
 
-struct fileHead//52
-{
-    unsigned msgType;
-    char filename[40];
-    unsigned account;
-    unsigned total;
-    unsigned size;
-    char pad[76];
-};
 
 struct fileblock
 {
     unsigned number;//4
-    char body[1020];
+    unsigned datalen;
+    char body[UDPLEN];
 };
 
 struct fileAck

@@ -3,7 +3,7 @@
 
 myUdpSocket::myUdpSocket() :errorCode(0)
 {
-    fromlen = sizeof(from);
+
 }
 
 
@@ -19,6 +19,7 @@ bool myUdpSocket::config(WCHAR* ip, const int port)//config socket setting, read
         return false;
     }
     connectSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    setsockopt(connectSocket, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(int));
     if (connectSocket == INVALID_SOCKET) {
 
         WSACleanup();
@@ -27,7 +28,7 @@ bool myUdpSocket::config(WCHAR* ip, const int port)//config socket setting, read
     char temp[16];
     WideCharToMultiByte(CP_ACP,0,ip,-1,temp,16,NULL,NULL);
     addr.sin_family = AF_INET;
-    addr.sin_addr.s_addr = inet_addr(temp);
+    addr.sin_addr.S_un.S_addr = inet_addr(temp);
     addr.sin_port = htons(port);
     return true;
 }
@@ -40,13 +41,14 @@ bool myUdpSocket::config(unsigned long ip, const int port)//config socket settin
         return false;
     }
     connectSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    setsockopt(connectSocket, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(int));
     if (connectSocket == INVALID_SOCKET) {
 
         WSACleanup();
         return false;
     }
     addr.sin_family = AF_INET;
-    addr.sin_addr.s_addr = ip;
+    addr.sin_addr.S_un.S_addr = ip;
     addr.sin_port = htons(port);
     return true;
 }
@@ -61,7 +63,9 @@ bool myUdpSocket::sendMsg(char* message, int length)//send message to the host
 
 bool myUdpSocket::recvMsg(char* message, int length)
 {
-    errorCode = recvfrom(connectSocket,message,length,0,&from,&fromlen);
+    int fromlen = sizeof(addr);
+    errorCode = recvfrom(connectSocket,message,length,0,(sockaddr*)&addr,&fromlen);
+    //qDebug("UDP收到：ACK数据大小=%d,标准大小位4",errorCode);
     if (errorCode == SOCKET_ERROR)
     {
         return false;

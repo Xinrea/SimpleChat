@@ -102,7 +102,7 @@ void MainWindow::on_loginButton_clicked()
             mainW->initConfig(loginModule.account,loginModule.session,loginModule.port);
             QObject::connect(mainW,SIGNAL(stateNow(bool)),this,SLOT(loginNow(bool)));
             mainW->show();
-            mainW->exec();
+            //mainW->exec();
             this->close();
             break;
         }
@@ -125,14 +125,14 @@ void MainWindow::on_accountEdit_textChanged(const QString &arg1)
 void MainWindow::on_registerButton_clicked()
 {
     registerWindow registerW;
-    registerW.show();
+    //registerW.show();
     registerW.exec();
 }
 
 void MainWindow::on_findpwdButton_clicked()
 {
     findpwdWindow findpwdW;
-    findpwdW.show();
+    //findpwdW.show();
     findpwdW.exec();
 }
 

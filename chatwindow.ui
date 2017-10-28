@@ -41,6 +41,9 @@
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
    <property name="styleSheet">
     <string notr="true">border:0px;</string>
    </property>
@@ -57,6 +60,9 @@
      <height>34</height>
     </rect>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
    <property name="styleSheet">
     <string notr="true">border:0px;
 font: 9pt &quot;微软雅黑&quot;;
@@ -67,6 +73,9 @@ background-color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>发送信息</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Return</string>
    </property>
   </widget>
   <widget class="QTextEdit" name="inputEdit">
@@ -207,6 +216,9 @@ p, li { white-space: pre-wrap; }
      <height>34</height>
     </rect>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
    <property name="styleSheet">
     <string notr="true">border:0px;
 font: 9pt &quot;微软雅黑&quot;;
@@ -222,30 +234,89 @@ background-color: rgb(218, 218, 218);</string>
   <widget class="QLabel" name="filenameLabel">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>260</y>
-     <width>71</width>
-     <height>31</height>
+     <x>540</x>
+     <y>230</y>
+     <width>141</width>
+     <height>51</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 9pt &quot;微软雅黑&quot;;
+color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string/>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QLabel" name="fileSizeLabel">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>310</y>
-     <width>71</width>
-     <height>31</height>
+     <x>540</x>
+     <y>290</y>
+     <width>141</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 9pt &quot;微软雅黑&quot;;
+color: rgb(255, 255, 255);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="FileLabel">
+   <property name="geometry">
+    <rect>
+     <x>537</x>
+     <y>220</y>
+     <width>151</width>
+     <height>151</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgba(255, 255, 255,60%);
+border-radius:10px;</string>
    </property>
    <property name="text">
     <string/>
    </property>
   </widget>
+  <widget class="QProgressBar" name="progressBar">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>540</x>
+     <y>340</y>
+     <width>141</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+    </font>
+   </property>
+   <property name="value">
+    <number>40</number>
+   </property>
+   <property name="textVisible">
+    <bool>true</bool>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
   <zorder>label</zorder>
+  <zorder>FileLabel</zorder>
   <zorder>inputEdit</zorder>
   <zorder>pushButton</zorder>
   <zorder>sendButton</zorder>
@@ -256,6 +327,7 @@ background-color: rgb(218, 218, 218);</string>
   <zorder>fileButton</zorder>
   <zorder>filenameLabel</zorder>
   <zorder>fileSizeLabel</zorder>
+  <zorder>progressBar</zorder>
  </widget>
  <resources/>
  <connections/>

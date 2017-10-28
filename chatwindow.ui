@@ -255,7 +255,7 @@ color: rgb(255, 255, 255);</string>
    <property name="geometry">
     <rect>
      <x>540</x>
-     <y>290</y>
+     <y>280</y>
      <width>141</width>
      <height>41</height>
     </rect>
@@ -277,7 +277,7 @@ color: rgb(255, 255, 255);</string>
      <x>537</x>
      <y>220</y>
      <width>151</width>
-     <height>151</height>
+     <height>171</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -315,6 +315,26 @@ border-radius:10px;</string>
     <enum>Qt::Horizontal</enum>
    </property>
   </widget>
+  <widget class="QLabel" name="speedLabel">
+   <property name="geometry">
+    <rect>
+     <x>545</x>
+     <y>370</y>
+     <width>135</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);
+font: 9pt &quot;微软雅黑&quot;;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
   <zorder>label</zorder>
   <zorder>FileLabel</zorder>
   <zorder>inputEdit</zorder>
@@ -328,6 +348,7 @@ border-radius:10px;</string>
   <zorder>filenameLabel</zorder>
   <zorder>fileSizeLabel</zorder>
   <zorder>progressBar</zorder>
+  <zorder>speedLabel</zorder>
  </widget>
  <resources/>
  <connections/>

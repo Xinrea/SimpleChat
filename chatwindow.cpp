@@ -41,7 +41,7 @@ void chatWindow::setWindow(QString name,unsigned long ips,unsigned ports,unsigne
         ui->portLabel->setText(QString("PORT: ")+QString::number(port));
     }
     filecontrol = new mfile;
-    connect(filecontrol,SIGNAL(progressTo(int)),this,SLOT(progress(int)));
+    connect(filecontrol,SIGNAL(progressTo(int,double)),this,SLOT(progress(int,double)));
 }
 
 char *chatWindow::IntToStr(const int ip, char *buf)
@@ -107,9 +107,10 @@ void chatWindow::mouseReleaseEvent(QMouseEvent* event)
     headpressed = false;
 }
 
-void chatWindow::progress(int t)
+void chatWindow::progress(int t,double s)
 {
     ui->progressBar->setValue(t);
+    ui->speedLabel->setText(QString("Speed: ")+QString::number(s)+QString("KB/s"));
 }
 
 

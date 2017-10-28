@@ -79,6 +79,8 @@ void mfile::fileSendThread()
     dataSocket.config(tf_ip,tf_port);
     unsigned leftlen = sendfilesize,number = 1;
     bool stop = false;
+    //QTime timer;
+    //timer.start();
     while(true)
     {
         fileblock block;
@@ -109,6 +111,9 @@ void mfile::fileSendThread()
         while(!dataSocket.recvMsg(reinterpret_cast<char*>(&ack),sizeof(fileAck)));
         //qDebug("Send %d",number);
         //qDebug("Recieve Ack：%d",ack.number);
+        //int progress = (filesize-leftlen)/filesize;
+        //double speed = (double)(filesize-leftlen)/(timer.elapsed()*1000)/1024;
+        //emit progressTo(progress,speed);
         while(true)//重发
         {
             if(ack.number != number)
@@ -166,7 +171,8 @@ void mfile::readytoReceive()
                 memcpy(buffer_s,buff.body,buff.datalen);
                 buffer_s += buff.datalen;//指针后移
                 double progress = (double)recievedNumber/filePackNumber_*100;
-                emit progressTo(progress);
+                double speed = (double)recievedNumber*UDPLEN/(time1.elapsed()/1000)/1024;
+                emit progressTo(progress,speed);
                 if(recievedNumber == filePackNumber_)
                 {
                     closesocket(listenSocket);

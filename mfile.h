@@ -43,7 +43,7 @@ public:
     void sendFile(QString path,unsigned account,unsigned long t_ip,unsigned t_port);
 
 signals:
-    void progressTo(int t);
+    void progressTo(int t,double s);
 
 private:
     void readytoReceive();//单独线程

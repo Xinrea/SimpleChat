@@ -50,7 +50,7 @@ protected:
 signals:
     void refreshChatW(unsigned account);
 public slots:
-    void progress(int t);
+    void progress(int t,double s);
 private slots:
     void on_pushButton_clicked();
     void on_sendButton_clicked();
